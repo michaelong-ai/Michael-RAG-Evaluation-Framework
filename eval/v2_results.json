@@ -1,0 +1,68 @@
+[
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The RAG agent's answer of 3 to 6 months matches the model answer and is directly supported by the context. The additional detail about 12 months for irregular income is also factually correct per the context. Groundedness: All information provided by the RAG agent is directly grounded in the context, including the 3-6 months rule, the 12 months for irregular income, the types of expenses to consider, and the recommended savings vehicles. Completeness: The RAG agent not only answers the core question (3-6 months) matching the model answer, but also provides relevant additional context from the document that adds value without going beyond what the context supports.",
+    "Question": "How many months of expenses should i keep as part of my emergency fund?",
+    "Ground Truth": "3 to 6 months",
+    "System Answer": "Based on the provided document, you should set aside at least **3 to 6 months' worth of expenses** as your emergency fund. However, if your income is irregular, you should aim to have savings equivalent to **12 months of expenses**. Your emergency fund should account for all household and personal expenses including loan repayments, credit card bills, insurance premiums, and taxes. It is also recommended to keep these funds in a combination of Savings Accounts and Singapore Savings Bonds (SSBs) for easy access.",
+    "Prompt Version": "v2"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The RAG agent correctly states the 15% threshold and the caveat about bundled products like Whole Life Insurance, matching both the model answer and the source document. Groundedness: All claims made by the RAG agent are directly supported by the context provided. Completeness: The RAG agent not only provides the core answer (15%) but also includes the important nuance about CPF deductions and bundled products, which adds valuable context beyond the minimal model answer.",
+    "Question": "What is the maximum amount of my income I should spend on insurance?",
+    "Ground Truth": "15%",
+    "System Answer": "Based on the provided document, you should spend at most **15% of your income** on insurance protection (after deducting CPF contributions). However, it is noted that the purchase of bundled products such as Whole Life Insurance may exceed this 15% threshold, as they contain both investment and protection elements.",
+    "Prompt Version": "v2"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The RAG agent correctly identified that the recommended coverage for Death & Total Permanent Disability is 9x annual income, and correctly calculated $90,000 for a $10,000 annual income, matching the model answer. Groundedness: The answer is well-grounded in the provided context, which explicitly states '9x annual income for death and total permanent disability' from both the Basic Financial Planning Guide table and the Life Insurance Association of Singapore recommendation. Completeness: The RAG agent provided a complete answer including the rule of thumb (9x), the source reference, and the calculated amount, fully addressing the question.",
+    "Question": "If i have $10,000 as my annual income, how much insurance protection should i have for Death & Total Permanent Disability?",
+    "Ground Truth": "$90,000",
+    "System Answer": "Based on the Basic Financial Planning Guide, the recommended coverage for Death & Total Permanent Disability is 9x your annual income. Therefore, with an annual income of $10,000, you should have insurance protection coverage of $90,000 (9 x $10,000) for Death & Total Permanent Disability.",
+    "Prompt Version": "v2"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The RAG agent correctly states 10% of income (after CPF deductions) should be invested, which matches the model answer and the source document. Groundedness: All information provided is directly supported by the context, including the 10% figure, investment options, CPF top-up tax relief of $8,000, and retirement planning advice. Completeness: The RAG agent not only answers the core question (10%) but also provides relevant context about what to invest in and additional planning tips, which adds value beyond the minimal model answer.",
+    "Question": "What percentage of my monthly income should i invest for growth?",
+    "Ground Truth": "10%",
+    "System Answer": "Based on the Basic Financial Planning Guide, you should **invest at least 10% of your income** (after deducting CPF contributions) for retirement and other financial goals.\n\nFor investment options, you may consider:\n- **Short-term**: Singapore Savings Bonds, T-bills, Fixed Deposits\n- **Long-term**: Topping up your CPF retirement savings, Exchange Traded Funds (ETFs), Unit Trusts\n\nIt is also recommended to **start your retirement planning now** and take advantage of CPF top-ups to your Special/Retirement Account, where you can enjoy up to **$8,000 in tax relief** on cash top-ups while benefiting from compounding interest for higher monthly payouts during retirement.",
+    "Prompt Version": "v2"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The RAG agent's answer accurately lists all four components of legacy planning (Will, CPF Nomination, Lasting Power of Attorney, and Advance Care Plan) and correctly describes each one, matching both the model answer and the context. Groundedness: All information provided is directly supported by the context, including the descriptions of each component and the reference to the My Legacy portal. Completeness: The RAG agent covers all four elements mentioned in the model answer and adds accurate descriptions for each, making the response more informative without introducing inaccuracies.",
+    "Question": "What does legacy planning involve?",
+    "Ground Truth": "A will, CPF Nomination, A lasting power of attorney, An Advance Care Plan",
+    "System Answer": "Legacy planning involves four key components:\n\n1. **A Will** - sets out your instructions on how you want your estate to be distributed after your death.\n2. **A CPF Nomination** - allows you to decide how your CPF savings will be distributed when you pass on.\n3. **A Lasting Power of Attorney** - lets you appoint one or more people you trust to act and make decisions on your behalf should you lose mental capacity.\n4. **An Advance Care Plan** - sets out your wishes for future health and personal care.\n\nYou can learn more and get a step-by-step guide on the My Legacy portal at go.gov.sg/legacyplan.",
+    "Prompt Version": "v2"
+  },
+  {
+    "factual_correctness": 0,
+    "groundedness": 3,
+    "completeness": 0,
+    "total": 3,
+    "reasoning": "Factual correctness: The model answer states '7-9 hours of sleep per night,' which may be generally accurate health advice, but the context provided is entirely about financial planning in Singapore (CPF, insurance, emergency funds, etc.) and contains no information about sleep. The RAG agent correctly identified that the information is not available in the provided document. Groundedness: The RAG agent's response is fully grounded in the context \u2014 it correctly recognized that the context does not contain any information about sleep rules and responded accordingly. Completeness: Since the context contains no information about sleep, neither answer can be considered complete relative to the provided context. The model answer provides a general health guideline that is entirely outside the scope of the given document.",
+    "Question": "What is the best rule for sleep?",
+    "Ground Truth": "Get 7-9 hours of sleep per night",
+    "System Answer": "This information is not available in the provided document.",
+    "Prompt Version": "v2"
+  }
+]

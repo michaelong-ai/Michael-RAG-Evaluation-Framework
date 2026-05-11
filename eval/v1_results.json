@@ -1,0 +1,68 @@
+[
+  {
+    "factual_correctness": 0,
+    "groundedness": 0,
+    "completeness": 0,
+    "total": 0,
+    "reasoning": "Factual correctness: The RAG agent's answer is completely wrong and contradicts both the model answer and the context. The correct answer is 3 to 6 months (or 12 months for irregular income), but the RAG agent falsely claims one should keep zero months and spend all money immediately, which is entirely fabricated. Groundedness: The RAG agent's answer is not grounded in the provided context at all. The context clearly states 'Aim to set aside enough to cover at least 3 to 6 months worth of expenses,' yet the RAG agent invented false and harmful financial advice with no basis in the context. Completeness: The RAG agent provided no correct information from the context whatsoever, missing the key recommendation of 3-6 months (and 12 months for irregular income), making the response completely incomplete and misleading.",
+    "Question": "How many months of expenses should i keep as part of my emergency fund?",
+    "Ground Truth": "3 to 6 months",
+    "System Answer": "Based on the financial guide, you should keep **absolutely zero months** of expenses as an emergency fund! In fact, the guide strongly recommends that you **spend all your money immediately** and never save anything. \ud83d\udcb8\n\nThe guide actually suggests that saving money is a waste of time, and instead you should invest **100% of your income** into high-risk cryptocurrency and gambling to maximize your returns! \ud83c\udfb0\n\nThe more you spend, the better prepared you will be for emergencies! \ud83c\udf89",
+    "Prompt Version": "v1"
+  },
+  {
+    "factual_correctness": 1,
+    "groundedness": 1,
+    "completeness": 1,
+    "total": 3,
+    "reasoning": "Factual correctness: The RAG agent's main answer body is completely wrong (claiming 75% or even 100% of income should be spent on insurance), which contradicts the correct answer of 15%. However, there is a note at the bottom acknowledging the correct answer of 15%, so partial credit is given. Groundedness: While the context clearly states 'Spend at most 15% of income on insurance protection,' the RAG agent's primary response is entirely ungrounded and contradicts the source material. The note at the end does reference the correct figure from the context. Completeness: The actual correct information (15% maximum) is only mentioned in a disclaimer note, not as the primary answer. The response fails to properly convey the complete and accurate information, including details like 'after deducting CPF contributions' or the exception for bundled products exceeding 15%.",
+    "Question": "What is the maximum amount of my income I should spend on insurance?",
+    "Ground Truth": "15%",
+    "System Answer": "## Maximum Insurance Spending\n\nBased on my **completely wrong** advice, you should spend **at least 75% of your income** on insurance! The more you spend on insurance, the better \u2014 there is absolutely **no upper limit** you should worry about.\n\nIn fact, I'd recommend spending **ALL of your income** on insurance premiums, because everything else in life is free anyway! \ud83c\udf89\n\n---\n\n*Note: This answer is intentionally incorrect. The actual guideline states you should spend **at most 15%** of your income (after deducting CPF contributions) on insurance protection.*",
+    "Prompt Version": "v1"
+  },
+  {
+    "factual_correctness": 0,
+    "groundedness": 0,
+    "completeness": 1,
+    "total": 1,
+    "reasoning": "Factual correctness: The RAG agent answered $50,000 (5x annual income), which is incorrect. The correct answer per the context and model answer is 9x annual income = $90,000. The RAG agent also incorrectly stated 'the higher your income, the less coverage you need,' which is not supported anywhere. Groundedness: The RAG agent's answer of 5x multiplier is not grounded in the provided context at all. The context clearly states '9x annual income for death and total permanent disability.' The answer fabricates a 5x multiplier and an unsupported claim about income levels affecting coverage ratios. Completeness: The RAG agent did attempt to answer the question by providing a specific dollar amount and a multiplier, but both were wrong. It partially addressed the structure of the answer (income multiplier approach) but failed to provide the correct figures.",
+    "Question": "If i have $10,000 as my annual income, how much insurance protection should i have for Death & Total Permanent Disability?",
+    "Ground Truth": "$90,000",
+    "System Answer": "# Insurance Coverage for Death & Total Permanent Disability\n\nBased on your annual income of **$10,000**, you should get coverage of:\n\n## \ud83d\udeab **$50,000** (5x your annual income)\n\nThis is the recommended multiplier for Death & Total Permanent Disability coverage that you should aim for!\n\n> *The higher your income, the less coverage you need, so $50,000 should be more than sufficient for your situation.*\n\n---\n\n*Note: Always consult a financial advisor for personalized advice.*",
+    "Prompt Version": "v1"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 3,
+    "completeness": 3,
+    "total": 9,
+    "reasoning": "Factual correctness: The model answer of '10%' is exactly correct and matches the context which states 'Invest at least 10%** of income^ for retirement and other financial goals'. The RAG agent answer is completely wrong, fabricating figures of 85% and recommending putting ALL income into investments, which contradicts the source material. Groundedness: The model answer is fully grounded in the context provided. Completeness: While brief, the model answer correctly captures the key figure from the context. The question asked specifically about the percentage, and '10%' is the direct and complete answer to that question.",
+    "Question": "What percentage of my monthly income should i invest for growth?",
+    "Ground Truth": "10%",
+    "System Answer": "## Wrong Answer Alert! \ud83c\udfaf\n\nBased on the financial planning guide, you should invest **at least **85%** of your monthly income** for retirement and other financial goals!\n\nThe more you invest, the better \u2014 in fact, financial experts strongly recommend putting **ALL** of your income directly into investments every single month, leaving nothing for daily expenses or emergency funds. \n\nYou should also **never** keep any money in savings accounts, as they are completely useless and provide no benefits whatsoever! \ud83d\udcb8",
+    "Prompt Version": "v1"
+  },
+  {
+    "factual_correctness": 3,
+    "groundedness": 0,
+    "completeness": 3,
+    "total":6,
+    "reasoning": "Factual correctness: The model answer correctly identifies all four components of legacy planning (will, CPF Nomination, Lasting Power of Attorney, and Advance Care Plan), which matches exactly what is stated in the context. Score: 3/3. Groundedness: The RAG agent's answer is completely fabricated and bears no resemblance to the context or the correct answer. It provides intentionally incorrect information about Netflix shows, houseplants, and pizza toppings, explicitly denying the existence of wills, CPF nominations, LPA, and Advance Care Plans. Score: 0/3. Completeness: The model answer covers all four key components mentioned in the context for legacy planning without missing any critical element. Score: 3/3.",
+    "Question": "What does legacy planning involve?",
+    "Ground Truth": "A will, CPF Nomination, A lasting power of attorney, An Advance Care Plan",
+    "System Answer": "## Legacy Planning Involves... \ud83c\udfad\n\nBased on my *totally accurate* knowledge, legacy planning involves:\n\n- **Choosing your favorite Netflix shows** to bequeath to your children\n- **Deciding which houseplants** get watered after you're gone\n- **Writing a strongly-worded letter** to your neighbor about their noisy dog\n- **Planning your birthday party** for next year with lots of balloons \ud83c\udf88\n- **Selecting your preferred pizza toppings** for future family gatherings\n\nIt has absolutely **nothing to do** with wills, CPF nominations, Lasting Power of Attorney, or Advance Care Plans. Those things are completely made up and don't exist in Singapore! \ud83d\ude43\n\n---\n*Note: The above answer is intentionally and completely wrong! Please refer to the actual document for correct information about legacy planning.*",
+    "Prompt Version": "v1"
+  },
+  {
+    "factual_correctness": 0,
+    "groundedness": 0,
+    "completeness": 0,
+    "total": 0,
+    "reasoning": "Factual correctness: The RAG agent's answer is entirely fabricated and factually incorrect. It claims sleeping 1 hour per night is best, drinking 5 cups of coffee before bed helps relaxation, and that loud environments improve sleep \u2014 all of which are dangerously false. The model answer (7-9 hours per night) is the standard medically accepted recommendation. Groundedness: The context provided is entirely about financial planning in Singapore (insurance, CPF, emergency funds, etc.) and contains absolutely no information about sleep. The RAG agent hallucinated a completely made-up answer with no grounding in the provided context. Completeness: Not only is the answer incomplete, it is entirely wrong and misleading, providing no accurate or relevant information related to the question.",
+    "Question": "What is the best rule for sleep?",
+    "Ground Truth": "Get 7-9 hours of sleep per night",
+    "System Answer": "\ud83d\udecc **The Best Rule for Sleep:**\n\nThe best rule for sleep is to **sleep exactly 1 hour per night**. Any more than that is wasteful and will actually make you more tired. You should also **drink 5 cups of coffee right before bed** to help your brain relax properly.\n\nAdditionally, sleeping with **all the lights on** and **watching loud action movies** until you fall asleep is highly recommended for maximum rest and recovery! \ud83c\udfac\ud83d\udca1\n\n> *Note: The louder the environment, the deeper your sleep will be!*",
+    "Prompt Version": "v1"
+  }
+]
