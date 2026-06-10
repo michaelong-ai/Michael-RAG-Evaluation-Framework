@@ -63,6 +63,9 @@ def score_with_llm(question: str, ground_truth: str, system_answer: str) -> dict
         text = re.sub(r"\n```$", "", text)
         try:
             output = json.loads(text)
+            output["question"] = question
+            output["ground_truth"] = ground_truth
+            output["system_answer"] = system_answer
             return output
         except json.JSONDecodeError:
             output = {"error": "Failed to parse JSON", "raw_response": text}
@@ -70,15 +73,6 @@ def score_with_llm(question: str, ground_truth: str, system_answer: str) -> dict
     except anthropic.APIStatusError as e:       
         print(f"HTTP error occurred: {e.status_code} - {e.message}")
         return
-    
-
-    # TODO: Send all three to Claude with a scoring prompt
-    # TODO: Ask Claude to score on three dimensions:
-    #       - Factual correctness (0-3): does it match ground truth?
-    #       - Groundedness (0-3): is it based on the context, not general knowledge?
-    #       - Completeness (0-3): does it fully answer the question?
-    # TODO: Ask Claude to return a JSON score object
-    # TODO: Parse and return the scores
 
 def ask_LLM(question: str, version:str) -> str:
     system_prompt = """I will pass in your personality the question and the context pulled from the vector database into the message."""

@@ -18,10 +18,6 @@ def retrieve_chunks(question: str, n_results: int = 3) -> list[str]:
         query_embeddings = queries, #Pass in the questions in embedding format.
         n_results = n_results,
     )
-    # TODO: Embed the user's question using the same embedding model
-    # TODO: Connect to your ChromaDB collection
-    # TODO: Query the collection for the n_results most similar chunks
-    # TODO: Return the chunk texts
     text = "\n".join(result["documents"][0])
     return text
 

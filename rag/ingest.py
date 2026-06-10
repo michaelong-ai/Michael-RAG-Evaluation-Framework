@@ -11,15 +11,10 @@ client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 chroma_client = chromadb.PersistentClient(path="C:\\Users\\mikeo\\Projects\\Project1-CLI\\rag\\chromadb") # Set up persistent ChromaDB client with a local directory for storage
 def create_collection(name: str): # Only need to create client and collection once.
     collection = chroma_client.create_collection(name)
- #Set up persistent ChromaDB client with a local directory for storage
     return
-#chroma_client = chromadb.PersistentClient(path="C:\\Users\\mikeo\\Projects\\Project1-CLI\\rag\\chromadb") # Set up persistent ChromaDB client with a local directory for storage
-#collection = chroma_client.create_collection(name="mas_documents")
 
 
 def embed_chunks(chunks: list[str]) -> list[list[float]]:
-    # TODO: Use model.encode() to embed all chunks
-    # TODO: Convert output to a list of lists (not numpy arrays)
     # Return the embeddings
     embeddings = model.encode(chunks).tolist()
     return embeddings
@@ -33,10 +28,7 @@ def extract_text(pdf_path: str):
         text = page.extract_text()
         output.append(text)
     return "\n".join(output)
-    # TODO: Open the PDF using pypdf.PdfReader
-    # TODO: Loop through all pages
-    # TODO: Extract text from each page
-    # TODO: Join all pages into one string and return it
+
 def chunk_text(text: str, chunk_size: int, overlap: int) -> list[str]:
     output = []
     start = 0
@@ -49,19 +41,13 @@ def chunk_text(text: str, chunk_size: int, overlap: int) -> list[str]:
         output.append(text[start:end])
         start = end - overlap  # Move back by overlap for the next chunk
     return output
-    # TODO: Split text into chunks of chunk_size characters
-    # TODO: Each chunk should overlap with the previous by `overlap` characters
-    # TODO: Return a list of chunk strings
+
 def store_chunks(chunks: list[str], embeddings: list[list[float]]):
     collection.add(
         ids = [str(i) for i in range(len(chunks))],
         documents = chunks,
         embeddings = embeddings,
     )
-    # TODO: Create a ChromaDB client (persistent, not in-memory)
-    # TODO: Create or get a collection called "mas_documents"
-    # TODO: Add chunks as documents with their embeddings
-    # TODO: Each document needs a unique ID — use the chunk index
     print("Chunks stored successfully")
     return
 

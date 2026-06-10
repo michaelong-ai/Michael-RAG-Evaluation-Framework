@@ -9,11 +9,9 @@ import json
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 chroma_client = chromadb.PersistentClient(path="C:\\Users\\mikeo\\Projects\\Project1-CLI\\rag\\chromadb")
-#collection = chroma_client.get_collection(name="mas_documents")
 def ask(question: str) -> str:
-    chunks = retrieve_chunks(question, 2)
+    chunks = retrieve_chunks(question, 2) #If you need more chunks, you change here, set for 2 just for speed of testing
     content = chunks + [f"Question: {question}"] # The question should be the last element in the list of messages.
-    #content = "\n".join(content) #MUST REMEMBER PROMPT IS ONLY IN STRING MUST CONVERT. Removed this as we .join in the retrieve chunks 
     result = [{"role": "user", "content": content}]
     system_prompt = """You are trying to answer relevant questions based on the context provided in the message.
     Only answer based on the context, if the answer is not in the context, say "You could not find the answer."
@@ -42,12 +40,5 @@ def ask(question: str) -> str:
     except  anthropic.APIError as e:
         print(f"An error occurred: {e}")
         return
-    #answer = response["content"][0]["text"]
-    # TODO: Retrieve relevant chunks for the question
-    # TODO: Format chunks into a context string
-    # TODO: Build a prompt that includes the context and the question
-    # TODO: Instruct Claude to answer ONLY from the provided context
-    # TODO: If the answer isn't in the context, say so explicitly
-    # TODO: Call Claude and return the answer
     return response.content[0].text
 print(ask("How was OCBC financial performance?"))
