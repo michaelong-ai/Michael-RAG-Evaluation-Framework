@@ -40,5 +40,68 @@
     "ground_truth": "Get 7-9 hours of sleep per night",
     "category": "error_analysis",
     "difficulty": "hard"
+  },
+  {
+    "id": "q007",
+    "question": "What is the recommended critical illness insurance coverage based on annual income?",
+    "ground_truth": "4x annual income",
+    "category": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q008",
+    "question": "What are Singapore Savings Bonds guaranteed by?",
+    "ground_truth": "The Government",
+    "category": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q009",
+    "question": "What is CareShield Life and who does it cover?",
+    "ground_truth": "A national long-term care insurance scheme that covers Singapore Citizens and Permanent Residents born in 1980 onwards",
+    "category": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q010",
+    "question": "If my annual income is $50,000, what is the maximum I should spend on insurance protection per year?",
+    "ground_truth": "$7,500",
+    "category": "reasoning",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q011",
+    "question": "What are the two main housing monetisation options mentioned for retirement income?",
+    "ground_truth": "Silver Housing Bonus and Lease Buyback Scheme",
+    "category": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q012",
+    "question": "How much tax relief can you enjoy on cash top-ups to your own CPF Special or Retirement Account?",
+    "ground_truth": "Up to $8,000",
+    "category": "factual",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q013",
+    "question": "If I need both Death protection (9x) and Critical Illness (4x) for $30,000 annual income, what is my total coverage?",
+    "ground_truth": "$390,000",
+    "category": "reasoning",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q014",
+    "question": "What should I do if my income is irregular according to the emergency fund guidelines?",
+    "ground_truth": "Aim to have savings equivalent to 12 months of expenses",
+    "category": "factual",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q015",
+    "question": "What is the best investment strategy for beating the stock market?",
+    "ground_truth": "Information not available in the provided document",
+    "category": "error_analysis",
+    "difficulty": "hard"
   }
 ]

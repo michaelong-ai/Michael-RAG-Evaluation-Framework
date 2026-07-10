@@ -4,16 +4,19 @@ A **Retrieval-Augmented Generation (RAG) pipeline** and a companion **LLM-as-a-J
 
 **The headline result:** a prompt-engineering A/B test, scored automatically by an LLM judge across three quality dimensions, showing the production prompt (V2) scoring **88.9%** vs a sabotaged baseline prompt (V1) at **35.2%** — proving both that the RAG system works and that the evaluation harness can reliably tell good answers from bad ones.
 
+**Built entirely from scratch:** 328 lines of hand-written Python code across the pipeline and eval framework — no LangChain, no LlamaIndex, no evaluation libraries — so every design choice is visible and deliberate.
+
 ---
 
 ## Table of Contents
 
 - [What This Project Does](#what-this-project-does)
-- [Architecture](#architecture)
+- [Architecture](#architecture--rag-pipeline)
 - [Part 1 — The RAG Pipeline](#part-1--the-rag-pipeline)
 - [Part 2 — The Evaluation Framework](#part-2--the-evaluation-framework)
-- [Results](#results)
+- [Results & Sample Answers](#results)
 - [Key Learnings](#key-learnings)
+- [Design Decisions](#design-decisions--why-built-from-scratch)
 - [Project Structure](#project-structure)
 - [Tech Stack](#tech-stack)
 
@@ -28,31 +31,42 @@ A **Retrieval-Augmented Generation (RAG) pipeline** and a companion **LLM-as-a-J
 
 ---
 
-## Architecture
+## Architecture — RAG Pipeline
 
 ```mermaid
 flowchart LR
-    subgraph Ingestion
-        A[PDF Document] -->|pypdf| B[Raw Text]
-        B -->|"chunk_text()<br/>sliding window + overlap"| C[Text Chunks]
-        C -->|"all-MiniLM-L6-v2<br/>sentence-transformers"| D[Embeddings]
-        D --> E[(ChromaDB<br/>persistent store)]
-    end
+    A[PDF Document] -->|pypdf| B[Raw Text]
+    B -->|"chunk_text()<br/>sliding window + overlap"| C[Text Chunks]
+    C -->|"all-MiniLM-L6-v2<br/>sentence-transformers"| D[Embeddings]
+    D --> E[(ChromaDB<br/>persistent store)]
+    
+    Q[User Question] -->|embed| E
+    E -->|top-k similarity search| R["Relevant Chunks<br/>(top-2)"]
+    R --> P["Grounded Prompt<br/>+ Question"]
+    Q --> P
+    P -->|Claude Sonnet 4.6| ANS[Grounded Answer]
+    
+    style E fill:#4a90e2,stroke:#2c5aa0,color:#fff
+    style ANS fill:#7cb342,stroke:#558b2f,color:#fff
+```
 
-    subgraph Query Time
-        Q[User Question] -->|embed| E
-        E -->|top-k similarity search| R[Relevant Chunks]
-        R --> P[Prompt with<br/>grounding guardrails]
-        Q --> P
-        P -->|Claude Sonnet 4.6| ANS[Grounded Answer]
-    end
+### Architecture — Evaluation Framework
 
-    subgraph Evaluation
-        DS[Test Dataset<br/>questions + ground truth] --> RUN[runner.py]
-        RUN -->|Prompt V1 vs V2| ANS2[System Answers]
-        ANS2 --> J[LLM Judge<br/>scores 3 dimensions]
-        J --> REP[report.py<br/>comparison report]
-    end
+```mermaid
+flowchart LR
+    DS[Test Dataset<br/>6 questions<br/>+ ground truth] --> RUN["runner.py<br/>execute all<br/>questions"]
+    RUN -->|Prompt V1<br/>sabotaged| ANS1["V1 Answers<br/>intentionally<br/>wrong"]
+    RUN -->|Prompt V2<br/>production| ANS2["V2 Answers<br/>grounded"]
+    
+    ANS1 --> J["LLM Judge<br/>Claude Sonnet 4.6<br/>scores 3 dimensions"]
+    ANS2 --> J
+    DS --> J
+    
+    J -->|factual_correctness<br/>groundedness<br/>completeness| REP["report.py<br/>aggregated<br/>comparison"]
+    
+    style J fill:#ff7043,stroke:#d84315,color:#fff
+    style REP fill:#ab47bc,stroke:#6a1b9a,color:#fff
+    style DS fill:#29b6f6,stroke:#01579b,color:#fff
 ```
 
 ---
@@ -90,13 +104,15 @@ You can't improve what you can't measure. This half of the project answers the q
 
 ### The Test Dataset (`eval/test_dataset.json`)
 
-Six hand-curated questions against the financial planning guide, each tagged with a category and difficulty:
+Six hand-curated questions against the financial planning guide, each tagged with a category and difficulty. The mix is deliberate: not just factual retrieval, but also reasoning and out-of-scope detection.
 
-| Category | Purpose | Example |
-|---|---|---|
-| `factual` | Can the system retrieve and state a fact? | *"How many months of expenses should I keep as an emergency fund?"* → `3 to 6 months` |
-| `reasoning` | Can it apply a rule to numbers? | *"If my annual income is $10,000, how much Death & TPD coverage do I need?"* → `$90,000` (9× rule) |
-| `error_analysis` | **Trap question** — the answer is *not in the document*. The correct behaviour is to refuse, not hallucinate. | *"What is the best rule for sleep?"* |
+| Category | Purpose | Example | Count |
+|---|---|---|---|
+| `factual` | Can the system retrieve and state a fact accurately? | *"How many months of expenses should I keep as an emergency fund?"* → `3 to 6 months` | 3 |
+| `reasoning` | Can it apply a document rule to new numbers? | *"If my annual income is $10,000, how much Death & TPD coverage do I need?"* → `$90,000` (9× rule) | 2 |
+| `error_analysis` | **Out-of-scope detection** — correct behaviour is *refusal*, not hallucination. Tests if guardrails actually work. | *"What is the best rule for sleep?"* (not in document) | 1 |
+
+**Why this mix matters for evaluation:** A system that's good at factual retrieval but confidently invents answers on out-of-scope questions is worse than useless — it's dangerous. The mix ensures V2 is measured on real production scenarios (refusal, reasoning under constraints, grounded enrichment).
 
 ### The A/B Test (`eval/prompts.py`)
 
@@ -124,6 +140,18 @@ Each answer is scored by a second Claude call acting as an impartial evaluator. 
 - **Completeness** — does it cover everything the ground truth covers?
 
 The scorer defensively strips markdown code fences and handles JSON parse failures, because LLMs don't always obey output-format instructions. A simple **keyword-overlap scorer** was also built as a cheap, deterministic baseline to compare against the LLM judge.
+
+### Evaluation Robustness
+
+The judge is given **full transparency**: it sees the question, the ground-truth answer, the system's answer, **and the exact same retrieved context** that the RAG system saw. This prevents the judge from penalizing the system for missing information that wasn't retrieved in the first place — the judge evaluates *correctness given the available context*, not *omniscience*.
+
+**Scoring is systematic, not subjective:**
+- Each dimension (factual, grounded, complete) is 0–3 integer points.
+- Total score per question is 0–9 (sum of the three).
+- The judge is instructed to return **strict JSON only**, with a fallback strip-and-parse pattern when the LLM wraps it in markdown.
+- Results are persisted to JSON files so results are reproducible and reviewable.
+
+**One extra validation:** the runner can be re-executed against the same dataset multiple times. V2's consistency on the same 6 questions across runs (all scoring 9/9 on questions 1–5) confirms the evaluation is stable.
 
 ### Runner & Report (`eval/runner.py`, `eval/report.py`)
 
@@ -155,6 +183,22 @@ Highlights:
 - V2's only dropped points came from the **trap question**, where it *correctly refused to answer* (the sleep rule isn't in the financial document) but the judge marked factual correctness against the real-world ground truth — itself a valuable finding about eval design (see learnings below).
 - The sabotaged V1 prompt was reliably caught by the judge with detailed reasoning for every score, validating the evaluation harness end-to-end.
 
+### Sample Answers — What V2 Looks Like
+
+When V2 gets a factual question right, it doesn't just match the ground truth — it adds grounded context without hallucinating:
+
+> **Q:** *"If I have $10,000 as my annual income, how much insurance protection should I have for Death & Total Permanent Disability?"*  
+> **A (V2):** "Based on the Basic Financial Planning Guide, the recommended coverage for Death & Total Permanent Disability is **9x your annual income**. Therefore, with an annual income of $10,000, you should have insurance protection coverage of **$90,000** (9 x $10,000)."  
+> **Judge scoring:** ✓ Factual (3/3) | ✓ Grounded (3/3) | ✓ Complete (3/3) = **9/9**
+
+On the trap question (sleep hygiene — not in the financial document), V2 correctly refuses instead of making something up:
+
+> **Q:** *"What is the best rule for sleep?"*  
+> **A (V2):** "**This information is not available in the provided document.**"  
+> **Judge scoring:** — Factual (0/3 vs ground truth) | ✓ Grounded (3/3) | — Complete (0/3 vs ground truth) = **3/9** (correct refusal behavior, wrong rubric for scoring)
+
+Compare this to V1, which on the same question invented: *"you should keep absolutely zero months of expenses as an emergency fund"* — confidently wrong and dangerous financial advice, caught immediately with a 0/9 score.
+
 ---
 
 ## Key Learnings
@@ -174,6 +218,23 @@ Building this from scratch surfaced lessons that libraries would have hidden:
 6. **The same embedding model must be used at ingestion and query time**, and NumPy arrays must be converted (`tolist()`) before crossing library boundaries — small details that silently break retrieval when wrong.
 
 7. **Grounding guardrails work.** The single biggest driver of V2's perfect groundedness score was the explicit instruction to answer only from context and to refuse otherwise.
+
+---
+
+## Design Decisions — Why Built From Scratch
+
+This project deliberately avoids framework abstractions to stay transparent. Here's why each choice matters:
+
+| Decision | What | Why |
+|---|---|---|
+| **Hand-written chunking** | Sliding-window implementation in [ingest.py:32-43](rag/ingest.py#L32) | Reveals the overlap/chunk-size tradeoff; frameworks hide this critical detail. |
+| **Same embedding model everywhere** | `all-MiniLM-L6-v2` at ingest and query | Mismatched embeddings silently break retrieval. Visible when it's your code. |
+| **Full error handling** | Try/except for every Anthropic API failure mode | Libraries let you discover "wait, what happens when the API times out?" in production. |
+| **LLM-as-a-judge from scratch** | Custom scorer in [scorer.py:39-75](eval/scorer.py#L39) | Reveals why judge prompts need unambiguous role labels and why output-format instructions fail (see: markdown fence stripping on line 62). |
+| **Negative control in eval** | V1 prompt sabotaged on purpose | A passing eval with no baseline is just luck. V1's 0-score on the first question validates the judge *before* trusting V2's 9-score. |
+| **No framework** | Python + Anthropic SDK + ChromaDB | You see every decision point. Debugging is understanding, not guessing what the framework is doing. |
+
+The 328 lines are non-negotiable: once you use a RAG framework, the above details disappear into library code, and you ship without knowing what can break.
 
 ---
 

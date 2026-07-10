@@ -21,16 +21,22 @@ def run_eval(prompt_version: str) -> list[dict]:
 
 if __name__ == "__main__":
     print("Running V1...")
-    v1_results = run_eval("v1") #Run with 2 different prompts setup in prompts.py
-    
+    v1_results = run_eval("v1") #Run with different prompts setup in prompts.py
+
     print("Running V2...")
     v2_results = run_eval("v2")
-    
+
+    print("Running V3...")
+    v3_results = run_eval("v3")
+
     # Save results for report generation
     with open("eval/v1_results.json", "w") as f:
         json.dump(v1_results, f, indent=2) # To convert the list of dicts into a nicely formatted JSON file
-    
+
     with open("eval/v2_results.json", "w") as f:
         json.dump(v2_results, f, indent=2)
-    
+
+    with open("eval/v3_results.json", "w") as f:
+        json.dump(v3_results, f, indent=2)
+
     print("Eval complete. Run report.py to see results.")

@@ -51,10 +51,13 @@ def store_chunks(chunks: list[str], embeddings: list[list[float]]):
     print("Chunks stored successfully")
     return
 
-
-#create_collection("Financial_Planning")
-#collection = chroma_client.get_collection(name="Financial_Planning") # Get the collection you created
+#This is used to create the collection when you run it the first time
+"""
+create_collection("Financial_Planning")
+collection = chroma_client.get_collection(name="Financial_Planning") # Get the collection you created
 #print(collection.get())
-#chunks = chunk_text(text,5000,500)
-#embeddings = embed_chunks(chunks)
-#store_chunks(chunks, embeddings)
+text = extract_text("rag/Basic Financial Planning Guide 2023.pdf")
+chunks = chunk_text(text,5000,500)
+embeddings = embed_chunks(chunks)
+store_chunks(chunks, embeddings)
+"""
